@@ -2,7 +2,7 @@
 
 public class CharacterDto
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
     public ThumbnailDto Thumbnail { get; set; } = default!;

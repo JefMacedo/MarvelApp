@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace MarvelApp.Infrastructure.Clients;
 
-class MarvelApiClient : IMarvelApiClient
+public class MarvelApiClient : IMarvelApiClient
 {
     private readonly HttpClient _http;
     private readonly IHashService _hash;
@@ -19,11 +19,11 @@ class MarvelApiClient : IMarvelApiClient
         _options = options.Value;
     }
 
-    public async Task<MarvelEnvelope<CharacterDto>> GetCharacterAsync(string name)
+    public async Task<MarvelEnvelope<CharacterDto>> GetCharacterAsync(string characterId)
     {
         var ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
         var hash = _hash.GenerateHash(ts);
-        var url = $"characters?name={name}&ts={ts}&apikey={_options.PublicKey}&hash={hash}";
+        var url = $"characters/{characterId}?&ts={ts}&apikey={_options.PublicKey}&hash={hash}";
 
         using var response = await _http.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -33,7 +33,7 @@ class MarvelApiClient : IMarvelApiClient
             ?? throw new InvalidOperationException("Resposta vazia da Marvel API.");
     }
 
-    public async Task<MarvelEnvelope<ComicDto>> GetComicsAsync(int characterId)
+    public async Task<MarvelEnvelope<ComicDto>> GetComicsAsync(string characterId)
     {
         var ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
         var hash = _hash.GenerateHash(ts);
